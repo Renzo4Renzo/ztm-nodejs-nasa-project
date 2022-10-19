@@ -1,10 +1,10 @@
 const { getLaunches, postLaunch, existsLaunchWithId, abortLaunchById } = require("../../models/launches.model");
 
-function httpGetLaunches(req, res) {
-  return res.status(200).json(getLaunches());
+async function httpGetLaunches(req, res) {
+  return res.status(200).json(await getLaunches());
 }
 
-function httpPostLaunch(req, res) {
+async function httpPostLaunch(req, res) {
   const launch = req.body;
 
   if (!launch.mission || !launch.rocket || !launch.launchDate || !launch.target) {
@@ -16,7 +16,7 @@ function httpPostLaunch(req, res) {
     return res.status(400).json({ error: "Invalid launch date" });
   }
 
-  postLaunch(launch);
+  await postLaunch(launch);
   return res.status(201).json(launch);
 }
 
