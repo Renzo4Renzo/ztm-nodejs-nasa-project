@@ -1,8 +1,6 @@
 const launchesDatabase = require("./launches.schema");
 const planets = require("./planets.schema");
 
-const launches = new Map();
-
 const DEFAULT_FLIGHT_NUMBER = 100;
 
 const launch = {
@@ -32,8 +30,8 @@ async function getLaunches() {
   return await launchesDatabase.find({}, { _id: 0, __v: 0 });
 }
 
-function existsLaunchWithId(launchId) {
-  return launches.has(launchId);
+async function existsLaunchWithId(launchId) {
+  return await launchesDatabase.findOne({ flightNumber: launchId });
 }
 
 async function postLaunch(launch) {
@@ -62,11 +60,19 @@ async function saveLaunch(launch) {
   }
 }
 
-function abortLaunchById(launchId) {
-  const aborted = launches.get(launchId);
-  aborted.upcoming = false;
-  aborted.success = false;
-  return aborted;
+async function abortLaunchById(launchId) {
+  console.log(launchId);
+  const aborted = await launchesDatabase.updateOne(
+    {
+      flightNumber: launchId,
+    },
+    {
+      upcoming: false,
+      success: false,
+    }
+  );
+  console.log(aborted);
+  return aborted.modifiedCount === 1;
 }
 
 module.exports = {
