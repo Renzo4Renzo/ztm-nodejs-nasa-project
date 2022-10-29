@@ -1,5 +1,4 @@
 const axios = require("axios");
-saveLaunch;
 
 const launchesDatabase = require("./launches.schema");
 const planets = require("./planets.schema");
